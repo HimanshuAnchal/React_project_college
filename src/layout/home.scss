@@ -1,0 +1,134 @@
+$primary-color: #007bff;
+$secondary-color: #ffffff;
+$text-color: #2d3748;
+$mobile-breakpoint: 768px;
+$small-breakpoint: 480px;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 70px); // Adjust for navbar height
+    background: linear-gradient(145deg, #e6f0fa 0%, #e5edf1 100%);
+    text-align: center;
+    padding: 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+
+    // Subtle background overlay for depth
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent);
+        z-index: 0;
+    }
+
+    h1 {
+        font-size: 3.5rem;
+        color: $text-color;
+        margin-bottom: 1.5rem;
+        font-weight: 800;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+        font-family: 'Arial', sans-serif;
+    }
+
+    p {
+        font-size: 1.3rem;
+        color: $text-color;
+        max-width: 700px;
+        margin-bottom: 2.5rem;
+        line-height: 1.8;
+        position: relative;
+        z-index: 1;
+        font-family: 'Arial', sans-serif;
+        opacity: 0.9;
+    }
+
+    .btn-get-started {
+        display: inline-block;
+        padding: 0.9rem 2rem;
+        background: $primary-color;
+        color: $secondary-color;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 4px 15px rgba($primary-color, 0.3);
+        transition: all 0.3s ease;
+
+        // Pulse animation
+        animation: pulse 2s infinite ease-in-out;
+
+        &:hover {
+            background: darken($primary-color, 15%);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba($primary-color, 0.4);
+        }
+    }
+
+    // Pulse animation keyframes
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 4px 15px rgba($primary-color, 0.3);
+        }
+
+        50% {
+            box-shadow: 0 4px 25px rgba($primary-color, 0.5);
+        }
+
+        100% {
+            box-shadow: 0 4px 15px rgba($primary-color, 0.3);
+        }
+    }
+
+    @media screen and (max-width: $mobile-breakpoint) {
+        padding: 2rem 1.5rem;
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            max-width: 90%;
+        }
+
+        .btn-get-started {
+            padding: 0.7rem 1.5rem;
+            font-size: 1.1rem;
+        }
+    }
+
+    @media screen and (max-width: $small-breakpoint) {
+        padding: 1.5rem 1rem;
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        p {
+            font-size: 0.95rem;
+            max-width: 95%;
+        }
+
+        .btn-get-started {
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+        }
+    }
+}
