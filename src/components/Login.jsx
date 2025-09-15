@@ -1,10 +1,27 @@
-import { NavLink } from "react-router-dom";
-import "../layout/login.scss"
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase"; // Import auth from firebase.js
+import "../layout/login.scss";
+
 const Login = () => {
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+    const [error, setError] = useState("");
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Placeholder for login logic
-        console.log('Login submitted');
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+
+        try {
+            // Firebase login
+            await signInWithEmailAndPassword(auth, email, password);
+            console.log("Login successful! 🎉");
+            navigate("/"); // redirect to homepage after login
+        } catch (err) {
+            console.error("Login failed:", err.message);
+            setError("Invalid email or password. Please try again.");
+        }
     };
 
     return (
@@ -20,7 +37,6 @@ const Login = () => {
                             placeholder="Enter your email"
                             required
                         />
-                        <label htmlFor="email"></label>
                     </div>
                     <div className="input-group">
                         <input
@@ -30,17 +46,19 @@ const Login = () => {
                             placeholder="Enter your password"
                             required
                         />
-                        <label htmlFor="password"></label>
                     </div>
                     <button type="submit" className="btn-login">Login</button>
                 </form>
+
+                {/* Show error if login fails */}
+                {error && <p className="error-text">{error}</p>}
+
                 <p className="signup-link">
-                    Don't have an account? <NavLink to={"/signup"}>Sign up here</NavLink>
+                    Don't have an account? <NavLink to="/signup">Sign up here</NavLink>
                 </p>
             </div>
         </section>
     );
 };
-
 
 export default Login;

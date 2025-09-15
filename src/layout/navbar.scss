@@ -88,6 +88,7 @@ $mobile-breakpoint: 768px;
         color: $text-color;
     }
 
+
     @media screen and (max-width: $mobile-breakpoint) {
         .logo {
             img {
@@ -154,6 +155,41 @@ $mobile-breakpoint: 768px;
 
         .hamburger {
             display: block;
+        }
+    }
+}
+
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid $primary-color; // optional, gives a nice ring
+    }
+
+    .welcome-text {
+        font-size: 1rem;
+        font-weight: 500;
+        color: $text-color;
+    }
+}
+
+// Responsive adjustments
+@media screen and (max-width: $mobile-breakpoint) {
+    .user-info {
+        .profile-pic {
+            width: 32px; // smaller for mobile
+            height: 32px;
+        }
+
+        .welcome-text {
+            font-size: 0.9rem; // slightly smaller
         }
     }
 }
