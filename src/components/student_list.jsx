@@ -2,8 +2,17 @@
 import React, { useState, useEffect } from "react";
 import "../layout/stu_list.scss";
 import { auth, db } from "../firebase";
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, deleteDoc } from "firebase/firestore";
-
+import {
+    collection,
+    query,
+    where,
+    orderBy,
+    onSnapshot,
+    addDoc,
+    serverTimestamp,
+    doc,
+    deleteDoc,
+} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 const StudentList = () => {
@@ -29,13 +38,17 @@ const StudentList = () => {
     useEffect(() => {
         if (!user) return;
 
-        const studentsCollection = collection(db, "students");
-        const q = query(studentsCollection, orderBy("createdAt", "desc"));
+        const q = query(
+            collection(db, "students"),
+            where("ownerEmail", "==", user.email),
+            orderBy("createdAt", "desc")
+        );
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            const studentData = snapshot.docs
-                .map((doc) => ({ id: doc.id, ...doc.data() }))
-                .filter((s) => s.ownerEmail === user.email);
+            const studentData = snapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
             setStudents(studentData);
         });
 
@@ -60,7 +73,10 @@ const StudentList = () => {
     const addTask = () => {
         if (taskInput.trim()) {
             const now = new Date();
-            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const timeString = now.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+            });
             setNewStudent({
                 ...newStudent,
                 tasks: [...newStudent.tasks, `${taskInput.trim()} (${timeString})`],
@@ -71,11 +87,10 @@ const StudentList = () => {
 
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this student?")) return;
-
         try {
             await deleteDoc(doc(db, "students", id));
             console.log("Student deleted successfully ✅");
-            // No need to update local state manually; onSnapshot will automatically reflect changes
+            // onSnapshot will automatically update the list
         } catch (err) {
             console.error("Error deleting student:", err.message);
         }
