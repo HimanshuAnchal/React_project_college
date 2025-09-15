@@ -11,6 +11,24 @@ $small-breakpoint: 480px;
     box-sizing: border-box;
 }
 
+.btn-google {
+    margin-top: -30px;
+    margin-bottom: 5px;
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: whitesmoke;
+    color: rgb(0, 0, 0);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+        background-color: #357ae8;
+    }
+}
+
 .login-section {
     display: flex;
     align-items: center;
