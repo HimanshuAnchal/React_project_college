@@ -30,11 +30,13 @@ const Navbar = () => {
             await signOut(auth);
             console.log("Logged out successfully 🚪");
             navigate("/login");
-            closeMenu(); // also close menu after logout
+            closeMenu(); // close menu after logout
         } catch (err) {
             console.error("Logout failed:", err.message);
         }
     };
+
+    const getNavLinkClass = ({ isActive }) => (isActive ? "active-link" : "");
 
     return (
         <div>
@@ -44,9 +46,22 @@ const Navbar = () => {
                 </div>
 
                 <div className={`nav-links ${isMenuOpen ? "active" : ""}`}>
-                    <NavLink to={"/"} onClick={closeMenu}>Home</NavLink>
-                    <NavLink to={"/about"} onClick={closeMenu}>About</NavLink>
-                    <NavLink to={"/contact"} onClick={closeMenu}>Contact</NavLink>
+                    {!user && (
+                        <NavLink to={"/"} onClick={closeMenu} className={getNavLinkClass}>
+                            Home
+                        </NavLink>
+                    )}
+                    <NavLink to={"/about"} onClick={closeMenu} className={getNavLinkClass}>
+                        About
+                    </NavLink>
+                    <NavLink to={"/contact"} onClick={closeMenu} className={getNavLinkClass}>
+                        Contact
+                    </NavLink>
+                    {user && (
+                        <NavLink to={"/student"} onClick={closeMenu} className={getNavLinkClass}>
+                            Records
+                        </NavLink>
+                    )}
                 </div>
 
                 <div className={`auth-buttons ${isMenuOpen ? "active" : ""}`}>

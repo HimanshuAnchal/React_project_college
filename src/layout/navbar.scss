@@ -159,6 +159,21 @@ $mobile-breakpoint: 768px;
     }
 }
 
+.nav-links a {
+  text-decoration: none;
+  color: black; // default color
+  margin: 0 10px;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: gray;
+  }
+}
+
+.active-link {
+  color: blue !important;  // active page link color
+  font-weight: bold;
+}
 
 .user-info {
     display: flex;

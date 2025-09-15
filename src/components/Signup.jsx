@@ -62,7 +62,7 @@ const Signup = () => {
             setSuccess("Signed up with Google successfully! 🎉");
 
             // Redirect to home after signup
-            navigate("/");
+            navigate("/student");
         } catch (err) {
             setError(err.message);
         } finally {

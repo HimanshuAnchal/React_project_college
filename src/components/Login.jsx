@@ -17,7 +17,7 @@ const Login = () => {
             // Firebase login
             await signInWithEmailAndPassword(auth, email, password);
             console.log("Login successful! 🎉");
-            navigate("/"); // redirect to homepage after login
+            navigate("/student"); // redirect to homepage after login
         } catch (err) {
             console.error("Login failed:", err.message);
             setError("Invalid email or password. Please try again.");
