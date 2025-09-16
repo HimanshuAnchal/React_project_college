@@ -7,7 +7,6 @@ import Signup from './components/Signup';
 import StudentList from './components/student_list';
 import ProtectedRoute from './components/ProtectedRoute';
 import Contact from './components/contact';
-import About from './components/about';
 
 const App = () => {
   return (
@@ -17,7 +16,6 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/contact' element={<Contact />} />
-        <Route path='/about' element={<About />} />
         <Route path='/student' element=
           {
             <ProtectedRoute>

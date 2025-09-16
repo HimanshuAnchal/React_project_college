@@ -51,9 +51,6 @@ const Navbar = () => {
                             Home
                         </NavLink>
                     )}
-                    <NavLink to={"/about"} onClick={closeMenu} className={getNavLinkClass}>
-                        About
-                    </NavLink>
                     <NavLink to={"/contact"} onClick={closeMenu} className={getNavLinkClass}>
                         Contact
                     </NavLink>
