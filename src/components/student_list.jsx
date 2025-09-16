@@ -178,7 +178,7 @@ const StudentList = () => {
     return (
         <section className="student-list-section">
             <div className="container">
-                <h1>Student Records</h1>
+                <h1>My Task</h1>
                 <button className="btn-add" onClick={() => toggleModal(true)} title="Add Student">
                     <i className="fas fa-plus"></i>
                 </button>
