@@ -14,7 +14,7 @@ $small-breakpoint: 480px;
 
 .student-list-section {
     min-height: calc(100vh - 70px);
-     background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent);
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent);
     padding: 2rem 1rem;
 
     .container {
@@ -178,6 +178,7 @@ $small-breakpoint: 480px;
                                 font-size: 0.9rem;
                                 position: relative;
                                 padding-left: 1rem;
+                                cursor: pointer;
 
                                 &::before {
                                     content: '•';
@@ -210,7 +211,7 @@ $small-breakpoint: 480px;
                 padding: 2rem;
                 border-radius: 12px;
                 width: 100%;
-                max-width: 400px;
+                max-width: 800px;
                 position: relative;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 
@@ -244,70 +245,42 @@ $small-breakpoint: 480px;
                     gap: 1rem;
 
                     .input-group {
-                        position: relative;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.25rem;
+
+                        label {
+                            font-size: 0.9rem;
+                            font-weight: 500;
+                            color: #4a5568;
+                        }
 
                         input {
                             padding: 0.75rem;
                             border: 2px solid $border-color;
                             border-radius: 8px;
                             font-size: 1rem;
-                            width: 100%;
-                            transition: border-color 0.3s ease;
 
                             &:focus {
                                 outline: none;
                                 border-color: $primary-color;
                                 box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
                             }
-
-                            &::placeholder {
-                                color: #a0aec0;
-                            }
                         }
+                    }
 
-                        label {
-                            position: absolute;
-                            top: 0.75rem;
-                            left: 0.75rem;
-                            color: #a0aec0;
-                            font-size: 0.9rem;
-                            transition: all 0.3s ease;
-                            pointer-events: none;
+                    .btn-add-task {
+                        padding: 0.5rem 1rem;
+                        background: $primary-color;
+                        color: $secondary-color;
+                        border: none;
+                        border-radius: 8px;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
 
-                            input:focus+&,
-                            input:not(:placeholder-shown)+& {
-                                top: -0.5rem;
-                                left: 0.5rem;
-                                font-size: 0.75rem;
-                                color: $primary-color;
-                                background: $secondary-color;
-                                padding: 0 0.25rem;
-                            }
-                        }
-
-                        &.task-group {
-                            display: flex;
-                            gap: 0.5rem;
-                            align-items: center;
-
-                            input {
-                                flex: 1;
-                            }
-
-                            .btn-add-task {
-                                padding: 0.5rem 1rem;
-                                background: $primary-color;
-                                color: $secondary-color;
-                                border: none;
-                                border-radius: 8px;
-                                font-size: 0.9rem;
-                                cursor: pointer;
-                                transition: all 0.3s ease;
-
-                                &:hover {
-                                    background: darken($primary-color, 10%);
-                                }
-                            }
+                        &:hover {
+                            background: darken($primary-color, 10%);
                         }
                     }
 
@@ -344,8 +317,8 @@ $small-breakpoint: 480px;
 
                     .btn-submit {
                         padding: 0.75rem;
-                        background: $primary-color;
-                        color: $secondary-color;
+                        background: black;
+                        color: white;
                         border: none;
                         border-radius: 8px;
                         font-size: 1rem;
@@ -354,7 +327,8 @@ $small-breakpoint: 480px;
                         transition: all 0.3s ease;
 
                         &:hover {
-                            background: darken($primary-color, 10%);
+                            background: white;
+                            color: black;
                             transform: translateY(-1px);
                             box-shadow: 0 4px 12px rgba($primary-color, 0.3);
                         }
@@ -368,9 +342,7 @@ $small-breakpoint: 480px;
         padding: 1rem;
 
         .container {
-            h1 {
-                font-size: 2rem;
-            }
+            h1 { font-size: 2rem; }
 
             .btn-add {
                 bottom: 1.5rem;
@@ -380,48 +352,11 @@ $small-breakpoint: 480px;
                 font-size: 1.3rem;
             }
 
-            .no-records {
-                padding: 1.5rem;
-
-                h2 {
-                    font-size: 1.5rem;
-                }
-
-                p {
-                    font-size: 0.9rem;
-                }
-            }
-
             .students-grid {
                 grid-template-columns: 1fr;
-                gap: 1rem;
-
-                .student-card {
-                    .card-header {
-                        padding: 1rem;
-                        flex-direction: column;
-                        align-items: flex-start;
-                        gap: 0.5rem;
-
-                        h3 {
-                            font-size: 1.2rem;
-                        }
-
-                        .card-actions {
-                            align-self: flex-end;
-                        }
-                    }
-
-                    .card-body {
-                        padding: 1rem;
-                    }
-                }
             }
 
-            .modal-content {
-                padding: 1.5rem;
-                margin: 1rem;
-            }
+            .modal-content { padding: 1.5rem; margin: 1rem; }
         }
     }
 
@@ -429,9 +364,7 @@ $small-breakpoint: 480px;
         padding: 0.5rem;
 
         .container {
-            h1 {
-                font-size: 1.8rem;
-            }
+            h1 { font-size: 1.8rem; }
 
             .btn-add {
                 bottom: 1rem;
@@ -441,37 +374,17 @@ $small-breakpoint: 480px;
                 font-size: 1.2rem;
             }
 
-            .no-records {
-                padding: 1rem;
-                margin: 0.5rem;
+            .modal-content { padding: 1rem; margin: 0.5rem; }
 
-                h2 {
-                    font-size: 1.3rem;
+            .add-student-form {
+                .input-group input {
+                    padding: 0.6rem;
                 }
 
-                p {
-                    font-size: 0.85rem;
-                }
-            }
-
-            .modal-content {
-                padding: 1rem;
-                margin: 0.5rem;
-
-                h2 {
-                    font-size: 1.5rem;
-                }
-
-                .add-student-form {
-                    .input-group input {
-                        padding: 0.6rem;
-                    }
-
-                    .btn-add-task,
-                    .btn-submit {
-                        padding: 0.6rem;
-                        font-size: 0.9rem;
-                    }
+                .btn-add-task,
+                .btn-submit {
+                    padding: 0.6rem;
+                    font-size: 0.9rem;
                 }
             }
         }

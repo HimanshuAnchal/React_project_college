@@ -19,12 +19,10 @@ import { onAuthStateChanged } from "firebase/auth";
 const StudentList = () => {
     const [students, setStudents] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newStudent, setNewStudent] = useState({
-        name: "",
-        tasks: [],
-    });
+    const [newStudent, setNewStudent] = useState({ name: "", tasks: [] });
     const [taskInput, setTaskInput] = useState("");
-    const [taskTime, setTaskTime] = useState("");
+    const [taskStartTime, setTaskStartTime] = useState("");
+    const [taskEndTime, setTaskEndTime] = useState("");
     const [editingTaskIndex, setEditingTaskIndex] = useState(null);
     const [editingStudentId, setEditingStudentId] = useState(null);
     const [user, setUser] = useState(null);
@@ -62,7 +60,8 @@ const StudentList = () => {
         if (!next) {
             setNewStudent({ name: "", tasks: [] });
             setTaskInput("");
-            setTaskTime("");
+            setTaskStartTime("");
+            setTaskEndTime("");
             setEditingTaskIndex(null);
             setEditingStudentId(null);
         }
@@ -96,40 +95,32 @@ const StudentList = () => {
     };
 
     const addOrUpdateTask = async () => {
-        if (!taskInput.trim() || !taskTime) return;
-        const formattedTime = formatTime(taskTime);
+        if (!taskInput.trim() || !taskStartTime || !taskEndTime) return;
 
-        if (editingStudentId !== null) {
-            const studentRef = doc(db, "students", editingStudentId);
-            const student = students.find((s) => s.id === editingStudentId) || newStudent;
-            const currentTasks = Array.isArray(student.tasks) ? [...student.tasks] : [];
+        const newTask = {
+            text: taskInput.trim(),
+            startTime: formatTime(taskStartTime),
+            endTime: formatTime(taskEndTime),
+        };
 
-            if (editingTaskIndex !== null) {
-                currentTasks[editingTaskIndex] = {
-                    text: taskInput.trim(),
-                    time: formattedTime,
-                };
-            } else {
-                currentTasks.push({ text: taskInput.trim(), time: formattedTime });
-            }
-
-            await updateDoc(studentRef, { tasks: currentTasks });
-            setStudents((prev) =>
-                prev.map((s) => (s.id === editingStudentId ? { ...s, tasks: currentTasks } : s))
-            );
-
+        if (editingTaskIndex !== null) {
+            // Update task in modal preview
+            setNewStudent((prev) => {
+                const updatedTasks = [...prev.tasks];
+                updatedTasks[editingTaskIndex] = newTask;
+                return { ...prev, tasks: updatedTasks };
+            });
             setEditingTaskIndex(null);
-            setTaskInput("");
-            setTaskTime("");
-            return;
+        } else {
+            setNewStudent((prev) => ({
+                ...prev,
+                tasks: [...(prev.tasks || []), newTask],
+            }));
         }
 
-        setNewStudent((prev) => ({
-            ...prev,
-            tasks: [...(prev.tasks || []), { text: taskInput.trim(), time: formattedTime }],
-        }));
         setTaskInput("");
-        setTaskTime("");
+        setTaskStartTime("");
+        setTaskEndTime("");
     };
 
     const handleDelete = async (id) => {
@@ -139,18 +130,34 @@ const StudentList = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!user) return alert("You must be logged in.");
+        if (!newStudent.name) return;
+
         if (editingStudentId) {
+            const studentRef = doc(db, "students", editingStudentId);
+            await updateDoc(studentRef, {
+                name: newStudent.name,
+                tasks: newStudent.tasks || [],
+            });
+
+            setStudents((prev) =>
+                prev.map((s) =>
+                    s.id === editingStudentId
+                        ? { ...s, name: newStudent.name, tasks: [...(newStudent.tasks || [])] }
+                        : s
+                )
+            );
+
             toggleModal(false);
             return;
         }
-        if (!user) return alert("You must be logged in.");
-        if (!newStudent.name) return;
 
         await addDoc(collection(db, "students"), {
             ...newStudent,
             ownerEmail: user.email,
             createdAt: serverTimestamp(),
         });
+
         toggleModal(false);
     };
 
@@ -165,13 +172,15 @@ const StudentList = () => {
         setEditingStudentId(studentId);
         setEditingTaskIndex(null);
         setTaskInput("");
-        setTaskTime("");
+        setTaskStartTime("");
+        setTaskEndTime("");
         setIsModalOpen(true);
     };
 
     const startEditTask = (index, task) => {
         setTaskInput(task.text || "");
-        setTaskTime(toTimeInputValue(task.time || ""));
+        setTaskStartTime(toTimeInputValue(task.startTime || ""));
+        setTaskEndTime(toTimeInputValue(task.endTime || ""));
         setEditingTaskIndex(index);
     };
 
@@ -179,7 +188,7 @@ const StudentList = () => {
         <section className="student-list-section">
             <div className="container">
                 <h1>My Task</h1>
-                <button className="btn-add" onClick={() => toggleModal(true)} title="Add Student">
+                <button className="btn-add" onClick={() => toggleModal(true)} title="Add Task">
                     <i className="fas fa-plus"></i>
                 </button>
 
@@ -222,7 +231,7 @@ const StudentList = () => {
                                         <ul>
                                             {(student.tasks || []).map((task, index) => (
                                                 <li key={index} onClick={() => startEditTask(index, task)}>
-                                                    {task.text} <em>({task.time})</em>
+                                                    {task.text} <em>({task.startTime} - {task.endTime})</em>
                                                 </li>
                                             ))}
                                         </ul>
@@ -239,32 +248,48 @@ const StudentList = () => {
                             <button className="btn-close" onClick={() => toggleModal(false)}>
                                 <i className="fas fa-times"></i>
                             </button>
-                            <h2>{editingStudentId ? "Edit Student" : "Add Student"}</h2>
+                            <h2>{editingStudentId ? "Update Task" : "Add Task"}</h2>
 
                             <form onSubmit={handleSubmit} className="add-student-form">
                                 <div className="input-group">
                                     <input
                                         type="text"
                                         name="name"
-                                        placeholder="Enter Task "
+                                        placeholder="Enter Task Heading"
                                         value={newStudent.name}
                                         onChange={handleInputChange}
                                         required
                                     />
                                 </div>
 
-                                <div className="input-group task-group">
+                                <div className="input-group">
                                     <input
                                         type="text"
                                         placeholder="Enter a task"
                                         value={taskInput}
                                         onChange={(e) => setTaskInput(e.target.value)}
                                     />
+                                </div>
+
+                                <div className="input-group">
+                                    <label>Start Time</label>
                                     <input
                                         type="time"
-                                        value={taskTime}
-                                        onChange={(e) => setTaskTime(e.target.value)}
+                                        value={taskStartTime}
+                                        onChange={(e) => setTaskStartTime(e.target.value)}
                                     />
+                                </div>
+
+                                <div className="input-group">
+                                    <label>End Time</label>
+                                    <input
+                                        type="time"
+                                        value={taskEndTime}
+                                        onChange={(e) => setTaskEndTime(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="input-group">
                                     <button type="button" className="btn-add-task" onClick={addOrUpdateTask}>
                                         {editingTaskIndex !== null ? "Update Task" : "Add Task"}
                                     </button>
@@ -275,8 +300,8 @@ const StudentList = () => {
                                         <strong>Tasks:</strong>
                                         <ul>
                                             {newStudent.tasks.map((task, index) => (
-                                                <li key={index}>
-                                                    {task.text} <em>({task.time})</em>
+                                                <li key={index} onClick={() => startEditTask(index, task)}>
+                                                    {task.text} <em>({task.startTime} - {task.endTime})</em>
                                                 </li>
                                             ))}
                                         </ul>
@@ -284,7 +309,7 @@ const StudentList = () => {
                                 )}
 
                                 <button type="submit" className="btn-submit">
-                                    {editingStudentId ? "Done" : "Add Student"}
+                                    {editingStudentId ? "Done" : "Done"}
                                 </button>
                             </form>
                         </div>
